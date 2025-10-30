@@ -1,149 +1,148 @@
 import streamlit as st
 import pandas as pd
 
-# -----------------------------
-# Page Configuration
-# -----------------------------
-st.set_page_config(page_title="🎬 Movie Recommender", page_icon="🍿", layout="centered")
+# ===================== PAGE CONFIG =====================
+st.set_page_config(page_title="🎬 Movie Recommendation App", layout="wide")
 
-# -----------------------------
-# Styling
-# -----------------------------
+# ===================== CUSTOM CSS =====================
 st.markdown("""
     <style>
-    body { background: linear-gradient(135deg, #0f1724, #243b55); color: #eef2ff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    .title { font-size: 40px; font-weight: 800; text-align: center; color: #FFD166; margin-bottom: 10px; }
-    .subtitle { text-align:center; color:#cfe8ff; margin-bottom:30px; }
-    .movie-card { display:flex; gap:16px; align-items:center; background: rgba(255,255,255,0.04); padding:14px; border-radius:12px; margin-bottom:14px; box-shadow: 0 6px 18px rgba(2,6,23,0.6); }
-    .movie-title { font-size:20px; font-weight:700; color:#9be7ff; margin-bottom:6px; }
-    .movie-meta { color:#ffd899; font-weight:600; }
-    img.poster { border-radius:8px; box-shadow: 0 6px 18px rgba(0,0,0,0.6); }
+        body {
+            background-color: black;
+            color: white;
+        }
+        .stApp {
+            background-color: #000000;
+        }
+        .movie-card {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0px 0px 10px rgba(255,255,255,0.1);
+        }
+        img {
+            border-radius: 10px;
+        }
     </style>
 """, unsafe_allow_html=True)
 
-# -----------------------------
-# Dataset (50 movies) - all lists same length
-# -----------------------------
-titles = [
-"Inception","Titanic","Avengers: Endgame","The Dark Knight","La La Land",
-"The Conjuring","Interstellar","Frozen","Parasite","Dune",
-"Gladiator","Avatar","The Notebook","Joker","Toy Story",
-"Finding Nemo","Doctor Strange","Black Panther","Up","Inside Out",
-"Shutter Island","Us","The Matrix","Coco","The Lion King",
-"Pulp Fiction","Fight Club","Forrest Gump","The Shawshank Redemption","The Godfather",
-"Avengers: Infinity War","Spider-Man: No Way Home","The Batman","Guardians of the Galaxy","Iron Man",
-"Thor: Ragnarok","Captain America: Civil War","Ant-Man","WALL-E","Moana",
-"Zootopia","Encanto","Cinderella","Mulan","Beauty and the Beast",
-"The Nun","Annabelle","Hereditary","IT","Get Out"
-]
+# ===================== MOVIE DATA =====================
+movies = pd.DataFrame({
+    "Title": [
+        "Inception", "The Dark Knight", "Interstellar", "Avengers: Endgame", "The Matrix",
+        "Titanic", "Avatar", "Joker", "The Shawshank Redemption", "Forrest Gump",
+        "The Godfather", "Pulp Fiction", "Fight Club", "The Lion King", "Frozen",
+        "Toy Story", "Up", "Finding Nemo", "Coco", "Inside Out",
+        "Black Panther", "Doctor Strange", "Iron Man", "Thor: Ragnarok", "Spider-Man: No Way Home",
+        "Guardians of the Galaxy", "Ant-Man", "Captain Marvel", "Eternals", "The Flash",
+        "Batman Begins", "Man of Steel", "Wonder Woman", "Aquaman", "Shazam!",
+        "The Conjuring", "Annabelle", "IT", "Insidious", "Get Out",
+        "Us", "Parasite", "Oppenheimer", "Barbie", "Tenet",
+        "Dune", "The Prestige", "Now You See Me", "The Hunger Games", "Divergent",
+        "The Maze Runner", "John Wick", "Mad Max: Fury Road", "Gladiator", "Braveheart"
+    ],
+    "Genre": [
+        "Sci-Fi", "Action", "Sci-Fi", "Action", "Sci-Fi",
+        "Romance", "Sci-Fi", "Thriller", "Drama", "Drama",
+        "Crime", "Crime", "Thriller", "Animation", "Animation",
+        "Animation", "Animation", "Animation", "Animation", "Animation",
+        "Action", "Action", "Action", "Action", "Action",
+        "Action", "Action", "Action", "Action", "Action",
+        "Action", "Action", "Action", "Action", "Action",
+        "Horror", "Horror", "Horror", "Horror", "Horror",
+        "Thriller", "Thriller", "Biography", "Comedy", "Sci-Fi",
+        "Sci-Fi", "Mystery", "Mystery", "Adventure", "Adventure",
+        "Adventure", "Action", "Action", "Action", "Action"
+    ],
+    "Rating": [
+        8.8, 9.0, 8.6, 8.4, 8.7,
+        7.8, 7.9, 8.4, 9.3, 8.8,
+        9.2, 8.9, 8.8, 8.5, 7.5,
+        8.3, 8.2, 8.1, 8.4, 8.1,
+        8.3, 7.5, 7.9, 8.0, 8.5,
+        8.0, 7.3, 6.9, 6.5, 6.2,
+        8.2, 7.1, 7.4, 7.0, 7.1,
+        7.5, 6.7, 7.3, 6.8, 7.7,
+        7.0, 8.6, 8.4, 7.1, 7.3,
+        8.2, 8.5, 7.3, 7.2, 7.0,
+        7.1, 8.0, 8.1, 8.5, 8.3
+    ],
+    "Poster": [
+        "https://m.media-amazon.com/images/I/51oD2VviQwL._AC_.jpg",
+        "https://m.media-amazon.com/images/I/51k0qa6qF9L._AC_.jpg",
+        "https://m.media-amazon.com/images/I/71y7iBVD5KL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/71niXI3lxlL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/51EG732BV3L._AC_.jpg",
+        "https://m.media-amazon.com/images/I/71lWzE4XrBL._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/81D+KJkO3aL._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/81xQBb5jRzL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/51NiGlapXlL._AC_.jpg",
+        "https://m.media-amazon.com/images/I/61KcQ4A+g4L._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/41+eK8zBwQL._AC_.jpg",
+        "https://m.media-amazon.com/images/I/71c05lTE03L._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/71A7+9vD7KL._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/81H7K0a3n+L._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/61qCTrf6UBL._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/81Wb+z4I7fL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/61+uX7yUDkL._AC_SL1024_.jpg",
+        "https://m.media-amazon.com/images/I/71tFihl1XNL._AC_SL1024_.jpg",
+        "https://m.media-amazon.com/images/I/81Y5WuARqpL._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/91e0lTzFjBL._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/81x+oFJc6PL._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/71niXI3lxlL._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/71eA1c5kNdL._AC_SL1000_.jpg",
+        "https://m.media-amazon.com/images/I/81N+8KX8HhL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/81K8iGz2exL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/81AIqVkhxLL._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/71W8vV+4g9L._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/81xOclTDyRL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/81Zt42ioCgL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/71QGvsjIgeL._AC_SL1000_.jpg",
+        "https://m.media-amazon.com/images/I/61OUGpUfAyL._AC_SL1024_.jpg",
+        "https://m.media-amazon.com/images/I/61zqjC2+4+L._AC_SL1000_.jpg",
+        "https://m.media-amazon.com/images/I/81Y0V8d5fBL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/71KqKk5bNHL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/81ykcN8kKoL._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/71Qf+vCvB9L._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/81xYcx6CL6L._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/91Z7FJX1IrL._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/81vZVqybmuL._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/91gDY0n1+dL._AC_SY679_.jpg",
+        "https://m.media-amazon.com/images/I/81D4Q1UiyCL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/81V+oFzceLL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/71FSzIGeMAL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/81hs6z+9LHL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/71UwDrT9yJL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/71i4Zs4LV+L._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/81sLRtYPhUL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/91FhZp9hKxL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/81tpPl0KUIL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/81rUuL8dr-L._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/71YqMnjwOrL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/81s1Du3zuzL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/71d5M6U8qOL._AC_SL1500_.jpg",
+        "https://m.media-amazon.com/images/I/91BV8tXrSGL._AC_SL1500_.jpg"
+    ]
+})
 
-genres = [
-"Sci-Fi","Romance","Action","Action","Romance",
-"Horror","Sci-Fi","Animation","Thriller","Sci-Fi",
-"Action","Sci-Fi","Romance","Drama","Animation",
-"Animation","Action","Action","Animation","Animation",
-"Thriller","Horror","Sci-Fi","Animation","Animation",
-"Crime","Drama","Drama","Drama","Crime",
-"Action","Action","Action","Action","Action",
-"Action","Action","Action","Animation","Animation",
-"Animation","Animation","Animation","Animation","Animation",
-"Horror","Horror","Horror","Horror","Thriller"
-]
+# ===================== UI =====================
+st.title("🍿 Movie Recommendation System")
+st.markdown("### Find movies by your favorite genre 🎬")
 
-ratings = [
-8.8,7.8,8.4,9.0,8.0,
-7.5,8.6,7.4,8.6,8.3,
-8.5,7.8,7.9,8.5,8.3,
-8.2,7.5,7.3,8.2,8.1,
-8.1,6.9,8.7,8.4,8.5,
-8.9,8.8,8.8,9.3,9.2,
-8.4,8.3,8.1,8.0,7.9,
-7.8,7.6,7.5,8.4,8.1,
-8.0,7.9,7.5,7.4,7.3,
-6.8,7.2,7.3,8.0,7.7
-]
+genre = st.selectbox("Select Genre", sorted(movies["Genre"].unique()))
 
-posters = [
-"https://m.media-amazon.com/images/I/51v5ZpFyaFL._AC_.jpg",
-"https://m.media-amazon.com/images/I/71yAz0M0Q0L._AC_UF894,1000_QL80_.jpg",
-"https://m.media-amazon.com/images/I/81ExhpBEbHL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/71pox3sbRPL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/71eGx3bMT0L._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/71WXIoa0aeL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/91kFYg4fX3L._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/71Jxq3pJffL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/91TqDgq+EGL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/91m9r3gP0zL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/51A3T9WgSGL._AC_.jpg",
-"https://m.media-amazon.com/images/I/71c05lTE03L._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/71oZ5k7tH5L._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81RrwyY8SOL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/71aSmVZ9NBL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81A5ZFBPTcL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/71YjU5+9jSL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/71niXI3lxlL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/71cN8B5ZgSL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81BES+ts5-L._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81dZ4z8cvUL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/71y5xF3Q2VL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/71d7rfw8v9L._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81Z9B6lRtHL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/71R9pZGxdtL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81aA7hEEykL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/71K9Lb2l+PL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/71xBLRBYOiL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/91KkWf50SoL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/51EG732BV3L._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81AYq8X6g8L._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/91j0vB3kFzL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/91IUF+O+xvL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81Y6rrnOkpL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/71y5xF3Q2VL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81tH4zNfPUL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81J0XfC4v7L._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81Z2WJ6bqgL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81Z5Jf6Tj+L._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81U8Qk6YpFL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81bxpXAFibL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/91Kc7lAqvOL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81y3YV4bSnL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81OZLgRvtGL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81WqdcQ2kZL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81RYkZzF5mL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81bVZhjtrbL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81jvXbnqPGL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/91qvVdK85dL._AC_SY679_.jpg",
-"https://m.media-amazon.com/images/I/81k0w4w2BML._AC_SY679_.jpg"
-]
+filtered_movies = movies[movies["Genre"] == genre].reset_index(drop=True)
 
-# build dataframe (all lists same length)
-movies = pd.DataFrame({"Title": titles, "Genre": genres, "Rating": ratings, "Poster": posters})
+st.markdown(f"### Showing {len(filtered_movies)} movies in **{genre}** genre")
 
-# -----------------------------
-# App UI
-# -----------------------------
-st.markdown("<div class='title'>🎥 Movie Recommender System 🍿</div>", unsafe_allow_html=True)
-st.markdown("<div class='subtitle'>Pick a genre below — results are sorted by rating.</div>", unsafe_allow_html=True)
-
-# Controls: genre selection
-selected_genre = st.selectbox("Select Genre", options=sorted(movies["Genre"].unique()))
-
-# Filter & sort
-filtered = movies[movies["Genre"] == selected_genre].sort_values(by="Rating", ascending=False)
-
-# Show count and top results
-st.markdown(f"**Showing {len(filtered)} {selected_genre} movies (sorted by rating):**")
-
-# Display each movie as a card
-for _, row in filtered.iterrows():
-    st.markdown(f"""
-    <div class="movie-card">
-        <img class="poster" src="{row.Poster}" width="110" />
-        <div>
-            <div class="movie-title">{row.Title}</div>
-            <div style="margin-top:6px;">
-                <span class="movie-meta">⭐ {row.Rating} &nbsp;|&nbsp; 🎭 {row.Genre}</span>
+cols = st.columns(4)
+for i, row in filtered_movies.iterrows():
+    with cols[i % 4]:
+        st.markdown(f"""
+            <div class="movie-card">
+                <img src="{row['Poster']}" width="180">
+                <h4>{row['Title']}</h4>
+                <p>⭐ Rating: {row['Rating']}</p>
             </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
