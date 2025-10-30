@@ -1,148 +1,126 @@
+# app.py
 import streamlit as st
 import pandas as pd
 
-# ===================== PAGE CONFIG =====================
-st.set_page_config(page_title="🎬 Movie Recommendation App", layout="wide")
+# ------------------ PAGE CONFIG ------------------
+st.set_page_config(page_title="🎬 Movie Recommender", page_icon="🍿", layout="wide")
 
-# ===================== CUSTOM CSS =====================
-st.markdown("""
+# ------------------ STYLES (BLACK BACKGROUND) ------------------
+st.markdown(
+    """
     <style>
-        body {
-            background-color: black;
-            color: white;
-        }
-        .stApp {
-            background-color: #000000;
-        }
-        .movie-card {
-            background-color: #1a1a1a;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0px 0px 10px rgba(255,255,255,0.1);
-        }
-        img {
-            border-radius: 10px;
-        }
+    .stApp { background-color: #000000; color: #ffffff; }
+    .title { text-align:center; color:#FFD166; font-size:34px; font-weight:700; margin-bottom:6px; }
+    .subtitle { text-align:center; color:#bfbfbf; margin-bottom:20px; }
+    .card { background: #111111; padding:10px; border-radius:10px; text-align:center; }
+    .meta { color:#FFD166; font-weight:600; margin-top:6px; }
+    img.poster { border-radius:8px; box-shadow: 0 6px 18px rgba(0,0,0,0.6); }
     </style>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True,
+)
 
-# ===================== MOVIE DATA =====================
-movies = pd.DataFrame({
-    "Title": [
-        "Inception", "The Dark Knight", "Interstellar", "Avengers: Endgame", "The Matrix",
-        "Titanic", "Avatar", "Joker", "The Shawshank Redemption", "Forrest Gump",
-        "The Godfather", "Pulp Fiction", "Fight Club", "The Lion King", "Frozen",
-        "Toy Story", "Up", "Finding Nemo", "Coco", "Inside Out",
-        "Black Panther", "Doctor Strange", "Iron Man", "Thor: Ragnarok", "Spider-Man: No Way Home",
-        "Guardians of the Galaxy", "Ant-Man", "Captain Marvel", "Eternals", "The Flash",
-        "Batman Begins", "Man of Steel", "Wonder Woman", "Aquaman", "Shazam!",
-        "The Conjuring", "Annabelle", "IT", "Insidious", "Get Out",
-        "Us", "Parasite", "Oppenheimer", "Barbie", "Tenet",
-        "Dune", "The Prestige", "Now You See Me", "The Hunger Games", "Divergent",
-        "The Maze Runner", "John Wick", "Mad Max: Fury Road", "Gladiator", "Braveheart"
-    ],
-    "Genre": [
-        "Sci-Fi", "Action", "Sci-Fi", "Action", "Sci-Fi",
-        "Romance", "Sci-Fi", "Thriller", "Drama", "Drama",
-        "Crime", "Crime", "Thriller", "Animation", "Animation",
-        "Animation", "Animation", "Animation", "Animation", "Animation",
-        "Action", "Action", "Action", "Action", "Action",
-        "Action", "Action", "Action", "Action", "Action",
-        "Action", "Action", "Action", "Action", "Action",
-        "Horror", "Horror", "Horror", "Horror", "Horror",
-        "Thriller", "Thriller", "Biography", "Comedy", "Sci-Fi",
-        "Sci-Fi", "Mystery", "Mystery", "Adventure", "Adventure",
-        "Adventure", "Action", "Action", "Action", "Action"
-    ],
-    "Rating": [
-        8.8, 9.0, 8.6, 8.4, 8.7,
-        7.8, 7.9, 8.4, 9.3, 8.8,
-        9.2, 8.9, 8.8, 8.5, 7.5,
-        8.3, 8.2, 8.1, 8.4, 8.1,
-        8.3, 7.5, 7.9, 8.0, 8.5,
-        8.0, 7.3, 6.9, 6.5, 6.2,
-        8.2, 7.1, 7.4, 7.0, 7.1,
-        7.5, 6.7, 7.3, 6.8, 7.7,
-        7.0, 8.6, 8.4, 7.1, 7.3,
-        8.2, 8.5, 7.3, 7.2, 7.0,
-        7.1, 8.0, 8.1, 8.5, 8.3
-    ],
-    "Poster": [
-        "https://m.media-amazon.com/images/I/51oD2VviQwL._AC_.jpg",
-        "https://m.media-amazon.com/images/I/51k0qa6qF9L._AC_.jpg",
-        "https://m.media-amazon.com/images/I/71y7iBVD5KL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/71niXI3lxlL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/51EG732BV3L._AC_.jpg",
-        "https://m.media-amazon.com/images/I/71lWzE4XrBL._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/81D+KJkO3aL._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/81xQBb5jRzL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/51NiGlapXlL._AC_.jpg",
-        "https://m.media-amazon.com/images/I/61KcQ4A+g4L._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/41+eK8zBwQL._AC_.jpg",
-        "https://m.media-amazon.com/images/I/71c05lTE03L._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/71A7+9vD7KL._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/81H7K0a3n+L._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/61qCTrf6UBL._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/81Wb+z4I7fL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/61+uX7yUDkL._AC_SL1024_.jpg",
-        "https://m.media-amazon.com/images/I/71tFihl1XNL._AC_SL1024_.jpg",
-        "https://m.media-amazon.com/images/I/81Y5WuARqpL._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/91e0lTzFjBL._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/81x+oFJc6PL._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/71niXI3lxlL._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/71eA1c5kNdL._AC_SL1000_.jpg",
-        "https://m.media-amazon.com/images/I/81N+8KX8HhL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/81K8iGz2exL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/81AIqVkhxLL._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/71W8vV+4g9L._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/81xOclTDyRL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/81Zt42ioCgL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/71QGvsjIgeL._AC_SL1000_.jpg",
-        "https://m.media-amazon.com/images/I/61OUGpUfAyL._AC_SL1024_.jpg",
-        "https://m.media-amazon.com/images/I/61zqjC2+4+L._AC_SL1000_.jpg",
-        "https://m.media-amazon.com/images/I/81Y0V8d5fBL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/71KqKk5bNHL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/81ykcN8kKoL._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/71Qf+vCvB9L._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/81xYcx6CL6L._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/91Z7FJX1IrL._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/81vZVqybmuL._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/91gDY0n1+dL._AC_SY679_.jpg",
-        "https://m.media-amazon.com/images/I/81D4Q1UiyCL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/81V+oFzceLL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/71FSzIGeMAL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/81hs6z+9LHL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/71UwDrT9yJL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/71i4Zs4LV+L._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/81sLRtYPhUL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/91FhZp9hKxL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/81tpPl0KUIL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/81rUuL8dr-L._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/71YqMnjwOrL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/81s1Du3zuzL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/71d5M6U8qOL._AC_SL1500_.jpg",
-        "https://m.media-amazon.com/images/I/91BV8tXrSGL._AC_SL1500_.jpg"
-    ]
-})
+# ------------------ MOVIE DATA (list of dicts, safe) ------------------
+# NOTE: For many movies we use a placeholder poster to guarantee images always show.
+PLACEHOLDER = "https://via.placeholder.com/300x450.png?text=No+Image"
 
-# ===================== UI =====================
-st.title("🍿 Movie Recommendation System")
-st.markdown("### Find movies by your favorite genre 🎬")
+movie_dicts = [
+    # Popular titles with TMDb poster (reliable)
+    {"Title":"Inception","Genre":"Sci-Fi","Rating":8.8,"Poster":"https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg"},
+    {"Title":"The Dark Knight","Genre":"Action","Rating":9.0,"Poster":"https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg"},
+    {"Title":"Interstellar","Genre":"Sci-Fi","Rating":8.6,"Poster":"https://image.tmdb.org/t/p/w500/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg"},
+    {"Title":"Avengers: Endgame","Genre":"Action","Rating":8.4,"Poster":"https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg"},
+    {"Title":"The Matrix","Genre":"Sci-Fi","Rating":8.7,"Poster":"https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg"},
+    {"Title":"Titanic","Genre":"Romance","Rating":7.8,"Poster":"https://image.tmdb.org/t/p/w500/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg"},
+    {"Title":"Avatar","Genre":"Sci-Fi","Rating":7.8,"Poster":"https://image.tmdb.org/t/p/w500/6EiRUJpuoeQPghrs3YNktfnqOVh.jpg"},
+    {"Title":"Joker","Genre":"Drama","Rating":8.5,"Poster":"https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg"},
+    {"Title":"The Shawshank Redemption","Genre":"Drama","Rating":9.3,"Poster":"https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg"},
+    {"Title":"Forrest Gump","Genre":"Drama","Rating":8.8,"Poster":"https://image.tmdb.org/t/p/w500/saHP97rTPS5eLmrLQEcANmKrsFl.jpg"},
+    {"Title":"The Godfather","Genre":"Crime","Rating":9.2,"Poster":"https://image.tmdb.org/t/p/w500/rPdtLWNsZmAtoZl9PK7S2wE3qiS.jpg"},
+    {"Title":"Pulp Fiction","Genre":"Crime","Rating":8.9,"Poster":"https://image.tmdb.org/t/p/w500/dM2w364MScsjFf8pfMbaWUcWrR.jpg"},
+    {"Title":"Parasite","Genre":"Thriller","Rating":8.6,"Poster":"https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg"},
+    {"Title":"Dune","Genre":"Sci-Fi","Rating":8.3,"Poster":"https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg"},
+    {"Title":"Gladiator","Genre":"Action","Rating":8.5,"Poster":"https://image.tmdb.org/t/p/w500/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg"},
 
-genre = st.selectbox("Select Genre", sorted(movies["Genre"].unique()))
+    # The rest: we include many titles but use placeholder posters to avoid any broken-link issues
+    {"Title":"Toy Story","Genre":"Animation","Rating":8.3,"Poster":PLACEHOLDER},
+    {"Title":"Finding Nemo","Genre":"Animation","Rating":8.1,"Poster":PLACEHOLDER},
+    {"Title":"Coco","Genre":"Animation","Rating":8.4,"Poster":PLACEHOLDER},
+    {"Title":"Frozen","Genre":"Animation","Rating":7.4,"Poster":PLACEHOLDER},
+    {"Title":"Inside Out","Genre":"Animation","Rating":8.1,"Poster":PLACEHOLDER},
+    {"Title":"Up","Genre":"Animation","Rating":8.2,"Poster":PLACEHOLDER},
+    {"Title":"The Lion King","Genre":"Animation","Rating":8.5,"Poster":PLACEHOLDER},
+    {"Title":"The Notebook","Genre":"Romance","Rating":7.9,"Poster":PLACEHOLDER},
+    {"Title":"La La Land","Genre":"Romance","Rating":8.0,"Poster":PLACEHOLDER},
+    {"Title":"Fight Club","Genre":"Drama","Rating":8.8,"Poster":PLACEHOLDER},
+    {"Title":"The Prestige","Genre":"Drama","Rating":8.5,"Poster":PLACEHOLDER},
+    {"Title":"Memento","Genre":"Thriller","Rating":8.4,"Poster":PLACEHOLDER},
+    {"Title":"Whiplash","Genre":"Drama","Rating":8.5,"Poster":PLACEHOLDER},
+    {"Title":"The Social Network","Genre":"Drama","Rating":7.7,"Poster":PLACEHOLDER},
+    {"Title":"The Silence of the Lambs","Genre":"Thriller","Rating":8.6,"Poster":PLACEHOLDER},
+    {"Title":"Se7en","Genre":"Thriller","Rating":8.6,"Poster":PLACEHOLDER},
+    {"Title":"Gone Girl","Genre":"Thriller","Rating":8.1,"Poster":PLACEHOLDER},
+    {"Title":"Knives Out","Genre":"Mystery","Rating":7.9,"Poster":PLACEHOLDER},
+    {"Title":"Tenet","Genre":"Sci-Fi","Rating":7.5,"Poster":PLACEHOLDER},
+    {"Title":"The Conjuring","Genre":"Horror","Rating":7.5,"Poster":PLACEHOLDER},
+    {"Title":"Annabelle","Genre":"Horror","Rating":5.4,"Poster":PLACEHOLDER},
+    {"Title":"Hereditary","Genre":"Horror","Rating":7.3,"Poster":PLACEHOLDER},
+    {"Title":"IT","Genre":"Horror","Rating":7.4,"Poster":PLACEHOLDER},
+    {"Title":"Get Out","Genre":"Horror","Rating":7.7,"Poster":PLACEHOLDER},
+    {"Title":"Nope","Genre":"Horror","Rating":6.8,"Poster":PLACEHOLDER},
+    {"Title":"Us","Genre":"Horror","Rating":6.8,"Poster":PLACEHOLDER},
+    {"Title":"John Wick","Genre":"Action","Rating":7.4,"Poster":PLACEHOLDER},
+    {"Title":"Mad Max: Fury Road","Genre":"Action","Rating":8.1,"Poster":PLACEHOLDER},
+    {"Title":"The Hunger Games","Genre":"Adventure","Rating":7.2,"Poster":PLACEHOLDER},
+    {"Title":"Divergent","Genre":"Adventure","Rating":6.4,"Poster":PLACEHOLDER},
+    {"Title":"The Maze Runner","Genre":"Adventure","Rating":6.8,"Poster":PLACEHOLDER},
+    {"Title":"The Flash","Genre":"Action","Rating":5.7,"Poster":PLACEHOLDER},
+    {"Title":"Black Panther","Genre":"Action","Rating":7.3,"Poster":PLACEHOLDER},
+    {"Title":"Guardians of the Galaxy","Genre":"Action","Rating":8.0,"Poster":PLACEHOLDER},
+    {"Title":"Iron Man","Genre":"Action","Rating":7.9,"Poster":PLACEHOLDER},
+    {"Title":"Thor: Ragnarok","Genre":"Action","Rating":7.9,"Poster":PLACEHOLDER},
+    {"Title":"Captain America: Civil War","Genre":"Action","Rating":7.8,"Poster":PLACEHOLDER},
+    {"Title":"Ant-Man","Genre":"Action","Rating":7.3,"Poster":PLACEHOLDER},
+    {"Title":"WALL-E","Genre":"Animation","Rating":8.4,"Poster":PLACEHOLDER},
+    {"Title":"Moana","Genre":"Animation","Rating":7.6,"Poster":PLACEHOLDER},
+    {"Title":"Zootopia","Genre":"Animation","Rating":8.0,"Poster":PLACEHOLDER},
+    {"Title":"Encanto","Genre":"Animation","Rating":7.3,"Poster":PLACEHOLDER},
+    {"Title":"Braveheart","Genre":"Action","Rating":8.3,"Poster":PLACEHOLDER}
+]
 
-filtered_movies = movies[movies["Genre"] == genre].reset_index(drop=True)
+# Convert to DataFrame (safe — list length consistent by construction)
+movies = pd.DataFrame(movie_dicts)
 
-st.markdown(f"### Showing {len(filtered_movies)} movies in **{genre}** genre")
+# ------------------ INTERFACE ------------------
+st.markdown('<div class="title">🎥 Movie Recommender System</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Black theme, images guaranteed (placeholder used if no poster).</div>', unsafe_allow_html=True)
 
+# Search + genre filter
+col1, col2 = st.columns([3,1])
+with col1:
+    query = st.text_input("🔎 Search movie title (leave empty to show by genre)", value="").strip()
+with col2:
+    genre_choice = st.selectbox("🎭 Filter by genre", options=["All"] + sorted(movies["Genre"].unique()))
+
+# Filter data
+df = movies.copy()
+if genre_choice != "All":
+    df = df[df["Genre"] == genre_choice]
+if query:
+    df = df[df["Title"].str.contains(query, case=False, na=False)]
+
+# Sort by rating desc
+df = df.sort_values(by="Rating", ascending=False).reset_index(drop=True)
+
+st.markdown(f"**Showing {len(df)} results**")
+
+# Display in responsive grid (4 columns)
 cols = st.columns(4)
-for i, row in filtered_movies.iterrows():
-    with cols[i % 4]:
-        st.markdown(f"""
-            <div class="movie-card">
-                <img src="{row['Poster']}" width="180">
-                <h4>{row['Title']}</h4>
-                <p>⭐ Rating: {row['Rating']}</p>
-            </div>
-        """, unsafe_allow_html=True)
+for idx, row in df.iterrows():
+    c = cols[idx % 4]
+    with c:
+        poster_url = row["Poster"] if row["Poster"] else PLACEHOLDER
+        # use image element + fallback alt text
+        st.image(poster_url, width=180)
+        st.markdown(f"**{row['Title']}**")
+        st.markdown(f"<div class='meta'>⭐ {row['Rating']} &nbsp;|&nbsp; {row['Genre']}</div>", unsafe_allow_html=True)
