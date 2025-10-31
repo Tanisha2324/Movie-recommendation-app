@@ -2,17 +2,38 @@ import streamlit as st
 import pandas as pd
 import urllib.parse
 import requests
-@st.cache_data(ttl=3600)
+from typing import Optional
+USER_AGENT_HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"}
+
+def build_placeholder(title: str, secondary: bool = False) -> str:
+    text = urllib.parse.quote_plus(title)
+    if secondary:
+        return f"https://placehold.co/300x450?text={text}"
+    return f"https://via.placeholder.com/300x450.png?text={text}"
+
+@st.cache_data(ttl=1800)
 def is_url_ok(url: str) -> bool:
     try:
-        resp = requests.head(url, allow_redirects=True, timeout=5)
+        resp = requests.head(url, allow_redirects=True, timeout=6, headers=USER_AGENT_HEADERS)
         if 200 <= resp.status_code < 300:
             return True
         # Some CDNs don't support HEAD properly; try GET as fallback
-        resp = requests.get(url, stream=True, allow_redirects=True, timeout=7)
+        resp = requests.get(url, stream=True, allow_redirects=True, timeout=8, headers=USER_AGENT_HEADERS)
         return 200 <= resp.status_code < 300
     except Exception:
         return False
+
+@st.cache_data(ttl=900)
+def can_reach_hosts() -> dict:
+    hosts = {
+        "tmdb": "https://image.tmdb.org/t/p/w92/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg",
+        "placeholder_primary": "https://via.placeholder.com/1x1.png",
+        "placeholder_secondary": "https://placehold.co/1x1.png",
+    }
+    results = {}
+    for key, url in hosts.items():
+        results[key] = is_url_ok(url)
+    return results
 
 # ------------------ PAGE CONFIG ------------------
 st.set_page_config(page_title="🎬 Movie Recommender", page_icon="🍿", layout="wide")
@@ -107,12 +128,22 @@ movies = pd.DataFrame(movie_dicts)
 st.markdown('<div class="title">🎥 Movie Recommender System</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Black theme, images guaranteed (placeholder used if no poster).</div>', unsafe_allow_html=True)
 
+# Diagnostics for connectivity to image hosts
+reach = can_reach_hosts()
+if not reach.get("tmdb", True):
+    st.warning("Cannot reach TMDb image CDN from this machine. Posters may not load.")
+if not reach.get("placeholder_primary", True) and not reach.get("placeholder_secondary", True):
+    st.warning("Cannot reach placeholder image services. Generated placeholders may not load.")
+
 # Search + genre filter
 col1, col2 = st.columns([3,1])
 with col1:
     query = st.text_input("🔎 Search movie title (leave empty to show by genre)", value="").strip()
 with col2:
     genre_choice = st.selectbox("🎭 Filter by genre", options=["All"] + sorted(movies["Genre"].unique()))
+
+# Optional: allow disabling URL validation if outbound requests are blocked
+validate_urls = st.toggle("Validate poster URLs (disable if behind firewall)", value=True)
 
 # Filter data
 df = movies.copy()
@@ -132,9 +163,12 @@ for idx, row in df.iterrows():
     c = cols[idx % 4]
     with c:
         poster_url = row["Poster"] if row["Poster"] else PLACEHOLDER
-        # validate URL; fall back to title-specific placeholder if unreachable
-        if not poster_url or poster_url == PLACEHOLDER or not is_url_ok(poster_url):
-            poster_url = f"https://via.placeholder.com/300x450.png?text={urllib.parse.quote_plus(row['Title'])}"
+        # validate URL; fall back to title-specific placeholder(s) if unreachable
+        if not poster_url or poster_url == PLACEHOLDER or (validate_urls and not is_url_ok(poster_url)):
+            candidate = build_placeholder(row['Title'], secondary=False)
+            if not (not validate_urls or is_url_ok(candidate)):
+                candidate = build_placeholder(row['Title'], secondary=True)
+            poster_url = candidate
         st.image(poster_url, width=180)
         st.markdown(f"**{row['Title']}**")
         st.markdown(f"<div class='meta'>⭐ {row['Rating']} &nbsp;|&nbsp; {row['Genre']}</div>", unsafe_allow_html=True)
