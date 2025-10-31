@@ -37,7 +37,7 @@ movie_dicts = [
     {"Title":"The Shawshank Redemption","Genre":"Drama","Rating":9.3,"Poster":"https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg"},
     {"Title":"Forrest Gump","Genre":"Drama","Rating":8.8,"Poster":"https://image.tmdb.org/t/p/w500/saHP97rTPS5eLmrLQEcANmKrsFl.jpg"},
     {"Title":"The Godfather","Genre":"Crime","Rating":9.2,"Poster":"https://image.tmdb.org/t/p/w500/rPdtLWNsZmAtoZl9PK7S2wE3qiS.jpg"},
-    {"Title":"Pulp Fiction","Genre":"Crime","Rating":8.9,"Poster":"https://www.imdb.com/title/tt0110912/mediaviewer/rm1959546112/?ref_=tt_ov_i"},
+    {"Title":"Pulp Fiction","Genre":"Crime","Rating":8.9,"Poster":"https://i.pinimg.com/originals/b3/4d/d7/b34dd71e2389ed3a37af5d7b7e9fedb2.jpg"},
     {"Title":"Parasite","Genre":"Thriller","Rating":8.6,"Poster":"https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg"},
     {"Title":"Dune","Genre":"Sci-Fi","Rating":8.3,"Poster":"https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg"},
     {"Title":"Gladiator","Genre":"Action","Rating":8.5,"Poster":"https://image.tmdb.org/t/p/w500/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg"},
