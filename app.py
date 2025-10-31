@@ -52,7 +52,7 @@ movie_dicts = [
     {"Title":"The Lion King","Genre":"Animation","Rating":8.5,"Poster":PLACEHOLDER},
     {"Title":"The Notebook","Genre":"Romance","Rating":7.9,"Poster":PLACEHOLDER},
     {"Title":"La La Land","Genre":"Romance","Rating":8.0,"Poster":PLACEHOLDER},
-    {"Title":"Fight Club","Genre":"Drama","Rating":8.8,"Poster":PLACEHOLDER},
+    {"Title":"Fight Club","Genre":"Drama","Rating":8.8,"Poster":"https://i.pinimg.com/originals/5b/5f/67/5b5f67cdabc31183072d27fb302a776e.jpg"},
     {"Title":"The Prestige","Genre":"Drama","Rating":8.5,"Poster":PLACEHOLDER},
     {"Title":"Memento","Genre":"Thriller","Rating":8.4,"Poster":PLACEHOLDER},
     {"Title":"Whiplash","Genre":"Drama","Rating":8.5,"Poster":PLACEHOLDER},
