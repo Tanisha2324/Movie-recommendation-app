@@ -83,7 +83,7 @@ movie_dicts = [
     {"Title":"Inside Out","Genre":"Animation","Rating":8.1,"Poster":"https://image.tmdb.org/t/p/w500/2H1TmgdfNtsKlU9jKdeNyYL5y8T.jpg"},
     {"Title":"Up","Genre":"Animation","Rating":8.2,"Poster":"https://upload.wikimedia.org/wikipedia/en/0/05/Up_%282009_film%29.jpg"},
     {"Title":"The Lion King","Genre":"Animation","Rating":8.5,"Poster":"https://image.tmdb.org/t/p/w500/sKCr78MXSLixwmZ8DyJLrpMsd15.jpg"},
-    {"Title":"The Notebook","Genre":"Romance","Rating":7.9,"Poster":"https://upload.wikimedia.org/wikipedia/en/8/86/The_Notebook_poster.jpg"},
+    {"Title":"The Notebook","Genre":"Romance","Rating":7.9,"Poster":"https://tse2.mm.bing.net/th/id/OIP.jntzs6a0WV71VWigENRqZwHaK4?pid=Api&P=0&h=180"},
     {"Title":"La La Land","Genre":"Romance","Rating":8.0,"Poster":"https://image.tmdb.org/t/p/w500/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg"},
     {"Title":"Fight Club","Genre":"Drama","Rating":8.8,"Poster":"https://image.tmdb.org/t/p/w500/a26cQPRhJPX6GbWfQbvZdrrp9j9.jpg"},
     {"Title":"The Prestige","Genre":"Drama","Rating":8.5,"Poster":"https://upload.wikimedia.org/wikipedia/en/d/d2/Prestige_poster.jpg"},
