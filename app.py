@@ -142,9 +142,6 @@ with col1:
 with col2:
     genre_choice = st.selectbox("🎭 Filter by genre", options=["All"] + sorted(movies["Genre"].unique()))
 
-# Optional: allow disabling URL validation if outbound requests are blocked
-validate_urls = st.toggle("Validate poster URLs (disable if behind firewall)", value=True)
-
 # Filter data
 df = movies.copy()
 if genre_choice != "All":
