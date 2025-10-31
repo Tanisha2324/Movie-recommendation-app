@@ -26,7 +26,7 @@ PLACEHOLDER = "https://via.placeholder.com/300x450.png?text=No+Image"
 
 movie_dicts = [
     # Popular titles with TMDb poster (reliable)
-    {"Title":"Inception","Genre":"Sci-Fi","Rating":8.8,"Poster":"https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg"},
+    {"Title":"Inception","Genre":"Sci-Fi","Rating":8.8,"Poster":"https://c8.alamy.com/comp/2JKYD0T/movie-poster-inception-2010-2JKYD0T.jpg"},
     {"Title":"The Dark Knight","Genre":"Action","Rating":9.0,"Poster":"https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg"},
     {"Title":"Interstellar","Genre":"Sci-Fi","Rating":8.6,"Poster":"https://image.tmdb.org/t/p/w500/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg"},
     {"Title":"Avengers: Endgame","Genre":"Action","Rating":8.4,"Poster":"https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg"},
