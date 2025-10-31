@@ -22,7 +22,6 @@ st.markdown(
 
 # ------------------ MOVIE DATA (list of dicts, safe) ------------------
 # NOTE: For many movies we use a placeholder poster to guarantee images always show.
-PLACEHOLDER = "https://via.placeholder.com/300x450.png?text=No+Image"
 
 movie_dicts = [
     # Popular titles with TMDb poster (reliable)
