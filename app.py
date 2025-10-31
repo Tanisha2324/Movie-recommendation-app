@@ -96,7 +96,7 @@ movie_dicts = [
     {"Title":"Knives Out","Genre":"Mystery","Rating":7.9,"Poster":"https://image.tmdb.org/t/p/w500/pThyQovXQrw2m0s9x82twj48Jq4.jpg"},
     {"Title":"Tenet","Genre":"Sci-Fi","Rating":7.5,"Poster":"https://image.tmdb.org/t/p/w500/k68nPLbIST6NP96JmTxmZijEvCA.jpg"},
     {"Title":"The Conjuring","Genre":"Horror","Rating":7.5,"Poster":"https://image.tmdb.org/t/p/w500/wVYREutTvI2tmxr6ujrHT704wGF.jpg"},
-    {"Title":"Annabelle","Genre":"Horror","Rating":5.4,"Poster":"https://upload.wikimedia.org/wikipedia/en/4/4a/Annabelle_poster.jpg"},
+    {"Title":"Annabelle","Genre":"Horror","Rating":5.4,"Poster":"https://m.media-amazon.com/images/S/pv-target-images/0e64bca6c68220f986a8e665a2d8f5f8ff60d6b7aed36c033a08cc6798a548c3.jpg"},
     {"Title":"Hereditary","Genre":"Horror","Rating":7.3,"Poster":"https://image.tmdb.org/t/p/w500/lHV8HHlhwNup2VbpiACtlKzaGIQ.jpg"},
     {"Title":"IT","Genre":"Horror","Rating":7.4,"Poster":"https://image.tmdb.org/t/p/w500/9E2y5Q7WlCVNEhP5GiVTjhEhx1o.jpg"},
     {"Title":"Get Out","Genre":"Horror","Rating":7.7,"Poster":"https://upload.wikimedia.org/wikipedia/en/a/a3/Get_Out_poster.png"},
@@ -105,7 +105,7 @@ movie_dicts = [
     {"Title":"John Wick","Genre":"Action","Rating":7.4,"Poster":"https://image.tmdb.org/t/p/w500/b9uYMMbm87IBFOq59pppvkkkgNg.jpg"},
     {"Title":"Mad Max: Fury Road","Genre":"Action","Rating":8.1,"Poster":"https://image.tmdb.org/t/p/w500/8tZYtuWezp8JbcsvHYO0O46tFbo.jpg"},
     {"Title":"The Hunger Games","Genre":"Adventure","Rating":7.2,"Poster":"https://upload.wikimedia.org/wikipedia/en/4/42/HungerGamesPoster.jpg"},
-    {"Title":"Divergent","Genre":"Adventure","Rating":6.4,"Poster":"https://upload.wikimedia.org/wikipedia/en/2/2a/Divergent_%282014_film%29_poster.jpg"},
+    {"Title":"Divergent","Genre":"Adventure","Rating":6.4,"Poster":"https://tse2.mm.bing.net/th/id/OIP.wFzVhHzcMoHF3JMENk6HngHaLk?pid=Api&P=0&h=180"},
     {"Title":"The Maze Runner","Genre":"Adventure","Rating":6.8,"Poster":"https://image.tmdb.org/t/p/w500/ode14q7WtDugFDp78fo9lCsmay9.jpg"},
     {"Title":"The Flash","Genre":"Action","Rating":5.7,"Poster":"https://image.tmdb.org/t/p/w500/rktDFPbfHfUbArZ6OOOKsXcv0Bm.jpg"},
     {"Title":"Black Panther","Genre":"Action","Rating":7.3,"Poster":"https://image.tmdb.org/t/p/w500/uxzzxijgPIY7slzFvMotPv8wjKA.jpg"},
@@ -116,7 +116,7 @@ movie_dicts = [
     {"Title":"Ant-Man","Genre":"Action","Rating":7.3,"Poster":"https://image.tmdb.org/t/p/w500/rS97hUJ1otKTTripGwQ0ujbuIri.jpg"},
     {"Title":"WALL-E","Genre":"Animation","Rating":8.4,"Poster":"https://image.tmdb.org/t/p/w500/hbhFnRzzg6ZDmm8YAmxBnQpQIPh.jpg"},
     {"Title":"Moana","Genre":"Animation","Rating":7.6,"Poster":"https://upload.wikimedia.org/wikipedia/en/2/26/Moana_Teaser_Poster.jpg"},
-    {"Title":"Zootopia","Genre":"Animation","Rating":8.0,"Poster":"https://upload.wikimedia.org/wikipedia/en/5/5e/Zootopia_%28movie_poster%29.jpg"},
+    {"Title":"Zootopia","Genre":"Animation","Rating":8.0,"Poster":"https://cinemasentries.com/wp-content/uploads/2023/05/Zootopia-Blu-ray.jpg"},
     {"Title":"Encanto","Genre":"Animation","Rating":7.3,"Poster":"https://image.tmdb.org/t/p/w500/4j0PNHkMr5ax3IA8tjtxcmPU3QT.jpg"},
     {"Title":"Braveheart","Genre":"Action","Rating":8.3,"Poster":"https://image.tmdb.org/t/p/w500/or1gBugydmjToAEq7OZY0owwFk.jpg"}
 ]
